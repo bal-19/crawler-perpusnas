@@ -1,1 +1,1 @@
-from .helper.scraper import Scraper
+from .controller.perpusnas import Perpusnas
