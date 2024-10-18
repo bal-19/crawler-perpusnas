@@ -3,7 +3,7 @@ from typing import Optional
 
 from datetime import datetime
 
-class MetadataModel(BaseModel):
+class PerpustakaanMetadataModel(BaseModel):
     npp: str
     nama: str
     lembaga: str
