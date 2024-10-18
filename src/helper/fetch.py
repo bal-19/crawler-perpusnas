@@ -1,5 +1,4 @@
-from dbm.ndbm import library
-from scraper import Scraper
+from .scraper import Scraper
 
 from dotenv import load_dotenv
 
