@@ -5,20 +5,21 @@ from datetime import datetime
 
 class PerpustakaanMetadataModel(BaseModel):
     npp: str
+    npp_lama: str
     nama: str
     lembaga: str
+    jenis: str
+    subjenis: str
+    status: str
     alamat: str
     telepon: str
     email: str
     website: str
-    jenis: str
-    subjenis: str
-    status_perpustakaan: str
     kode_pos: str
-    provinsi: str
-    kabkota: str
-    kecamatan: str
     kelurahan: str
+    kecamatan: str
+    kabkota: str
+    provinsi: str
     created_at: Optional[int] = Field(default_factory=lambda: int(datetime.now().timestamp() * 1000))
     updated_at: Optional[int] = Field(default_factory=lambda: int(datetime.now().timestamp() * 1000))
 
