@@ -1,7 +1,10 @@
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from bs4 import BeautifulSoup
 from datetime import datetime
 
 import requests
+import time
 
 
 class Scraper:
@@ -29,8 +32,17 @@ class Scraper:
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
             'x-requested-with': 'XMLHttpRequest',
         }
+        self.session = requests.Session()
+        self.retries = Retry(
+            total=10,
+            backoff_factor=0.8,
+            status_forcelist=[500, 502, 503, 504]
+        )
+        self.adapter = HTTPAdapter(max_retries=self.retries)
+        self.session.mount("http://", self.adapter)
+        self.session.mount("https://", self.adapter)
     
-    def get_libraries(self, url: str, **kwargs) -> dict:
+    def get_libraries(self, url: str, start: int = 0, length: int = 10, **kwargs) -> dict:
         current_timestamp = int(datetime.now().timestamp())
         params = {
             'jenis': str(kwargs.get('jenis', '')).upper(),
@@ -82,15 +94,16 @@ class Scraper:
             'columns[6][orderable]': 'false',
             'columns[6][search][value]': '',
             'columns[6][search][regex]': 'false',
-            'start': str(kwargs.get('start', '0')),
-            'length': str(kwargs.get('length', '10')),
+            'start': str(start),
+            'length': str(length),
             'search[value]': '',
             'search[regex]': 'false',
             '_': str(current_timestamp),
         }
         
-        response = requests.get(url, params=params, cookies=self.cookies, headers=self.headers)
+        response = self.session.get(url, timeout=10, params=params, cookies=self.cookies, headers=self.headers)
         
+        print(response.url)
         if response.status_code == 200:
             result = response.json()
             return result
@@ -99,7 +112,7 @@ class Scraper:
             return
 
     def get_type(self, url: str) -> list:
-        response = requests.get(url, headers=self.headers)
+        response = self.session.get(url, timeout=10, headers=self.headers)
         
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, "html.parser")
@@ -119,7 +132,7 @@ class Scraper:
             return
     
     def get_region(self, url: str) -> dict:
-        response = requests.get(url, headers=self.headers)
+        response = self.session.get(url, timeout=10, headers=self.headers)
         
         if response.status_code == 200:
             result = response.json()
