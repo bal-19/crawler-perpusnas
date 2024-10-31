@@ -11,18 +11,33 @@ class Perpusnas:
         self.mongo = Monggo("perpustakaan")
     
     def run(self):
-        start = 0
-        while True:
-            res = fetch.fetch_libraries_data(start=start, length=100)
-            if res.get("data") is not []:
-                for data in res.get("data"):
-                    result = mapping.data(data)
-                    metadata_id = generate_id(result)
-                    result["_id"] = metadata_id
-                    try:
-                        self.mongo.insert("data", data=result)
-                    except DuplicateKeyError:
-                        self.mongo.update("data", {"_id": metadata_id}, {"$set": result})
-            else:
-                break
-            start += 100
+        list_provinsi = fetch.fetch_province_data()
+        for provinsi in list_provinsi:
+            provinsi_id = provinsi.get("id")
+            
+            list_kabkota = fetch.fetch_regency_data(provinsi_id)
+            for kabkota in list_kabkota:
+                kabkota_id = kabkota.get("id")
+                
+                list_kecamatan = fetch.fetch_district_data(kabkota_id)
+                for kecamatan in list_kecamatan:
+                    kecamatan_id = kecamatan.get("id")
+
+                    list_kelurahan = fetch.fetch_subdistrict_data(kecamatan_id)
+                    for kelurahan in list_kelurahan:
+                        kelurahan_id = kelurahan.get("id")
+                        
+                        list_kategori = fetch.fetch_type_data()
+                        for kategori in list_kategori:
+                            list_subkategori = fetch.fetch_subtype_data(kategori)
+                            
+                            for subkategori in list_subkategori:
+                                start = 0
+                                while True:
+                                    data = fetch.fetch_libraries_data(start=start, length=10, jenis=kategori, provinsi_id=provinsi_id, kabkota_id=kabkota_id, kecamatan_id=kecamatan_id, kelurahan_id=kelurahan_id, subjenis=subkategori)
+                                    
+                                    if data.get("data"):
+                                        for detail_data in data.get("data"):
+                                            result = mapping.data(detail_data)
+                                    else:
+                                        break
