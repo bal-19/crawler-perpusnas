@@ -6,5 +6,5 @@ import uuid
 
 def generate_id(data: dict) -> str:
     payload = PerpustakaanMetadataModel.model_validate(data)
-    ids = f"{payload.npp}_{payload.nama}_{payload.lembaga}"
+    ids = f"{payload.kelurahan}_{payload.nama}"
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, ids))
