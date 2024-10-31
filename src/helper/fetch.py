@@ -7,20 +7,20 @@ import os
 
 
 load_dotenv()
-BASE_URL = os.getenv("URL_SCRAPING")
+BASE_URL = "https://data.perpusnas.go.id"
 
 class fetch:
     
     @staticmethod
-    def fetch_libraries_data(start: int, length: int) -> dict:
+    def fetch_libraries_data(start: int, length: int, **kwargs) -> dict:
         """Fetch libraries data from API"""
         url = f"{BASE_URL}/public/direktori/list"
         
-        libraries = Scraper().get_libraries(url, start=start, length=length)
+        libraries = Scraper().get_libraries(url, start=start, length=length, **kwargs)
         return libraries
 
     @staticmethod
-    def fetch_type_data() -> list:
+    def fetch_type_data() -> list[str]:
         """Fetch type data from API"""
         url = f"{BASE_URL}/reference/list-dropdown/jenis-perpustakaan"
         
@@ -28,7 +28,7 @@ class fetch:
         return types
     
     @staticmethod
-    def fetch_subtype_data(type: str) -> list:
+    def fetch_subtype_data(type: str) -> list[str]:
         """Fetch subtype data from API"""
         type_encode = urllib.parse.quote(type.upper())
         url = f"{BASE_URL}/reference/list-dropdown/subjenis-perpustakaan/{type_encode}"
@@ -52,4 +52,17 @@ class fetch:
         regencies = Scraper().get_region(url)
         return regencies
     
-    
+    @staticmethod
+    def fetch_district_data(id_kabkota: str) -> list[dict]:
+        """Fetch district data from API"""
+        url = f"{BASE_URL}/public/kewilayahan/dati3/list-dropdown/{id_kabkota}"
+        
+        district = Scraper().scrape_region(url)
+        return district
+
+    def fetch_subdistrict_data(id_kecamatan: str) -> list[dict]:
+        """Fetch subdistrict data from API"""
+        url = f"{BASE_URL}/public/kewilayahan/dati4/list-dropdown/{id_kecamatan}"
+        
+        subdistrict = Scraper().scrape_region(url)
+        return subdistrict
