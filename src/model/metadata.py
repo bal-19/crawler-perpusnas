@@ -4,18 +4,18 @@ from typing import Optional
 from datetime import datetime
 
 class PerpustakaanMetadataModel(BaseModel):
-    npp: str
-    npp_lama: str
+    npp: str | None
+    npp_lama: str | None
     nama: str
-    lembaga: str
+    lembaga: str | None
     jenis: str
-    subjenis: str
-    status: str
-    alamat: str
-    telepon: str
-    email: str
-    website: str
-    kode_pos: str
+    subjenis: str 
+    status: str | None
+    alamat: str | None
+    telepon: str | None
+    email: str | None
+    website: str | None
+    kode_pos: str 
     kelurahan: str
     kecamatan: str
     kabkota: str

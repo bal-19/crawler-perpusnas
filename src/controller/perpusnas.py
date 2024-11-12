@@ -4,7 +4,6 @@ from ..helper.mapping import mapping
 from ..helper.fetch import fetch
 
 from pymongo.errors import DuplicateKeyError
-import json
 
 class Perpusnas:
     def __init__(self) -> None:
@@ -23,21 +22,35 @@ class Perpusnas:
                 for kecamatan in list_kecamatan:
                     kecamatan_id = kecamatan.get("id")
 
-                    list_kelurahan = fetch.fetch_subdistrict_data(kecamatan_id)
-                    for kelurahan in list_kelurahan:
-                        kelurahan_id = kelurahan.get("id")
-                        
-                        list_kategori = fetch.fetch_type_data()
-                        for kategori in list_kategori:
-                            list_subkategori = fetch.fetch_subtype_data(kategori)
+                    list_kategori = fetch.fetch_type_data()
+                    for kategori in list_kategori:
+                        start = 0
+                        while True:
+                            data = fetch.fetch_libraries_data(start=start, length=20, jenis=kategori, provinsi_id=provinsi_id, kabkota_id=kabkota_id, kecamatan_id=kecamatan_id)
                             
-                            for subkategori in list_subkategori:
-                                start = 0
-                                while True:
-                                    data = fetch.fetch_libraries_data(start=start, length=10, jenis=kategori, provinsi_id=provinsi_id, kabkota_id=kabkota_id, kecamatan_id=kecamatan_id, kelurahan_id=kelurahan_id, subjenis=subkategori)
-                                    
-                                    if data.get("data"):
-                                        for detail_data in data.get("data"):
-                                            result = mapping.data(detail_data)
-                                    else:
-                                        break
+                            if data.get("recordsTotal") < 10:
+                                if data.get("data"):
+                                    for detail_data in data.get("data"):
+                                        result = mapping.data(detail_data)
+                                        id_metadata = generate_id(result)
+                                        result["_id"] = id_metadata
+                                        
+                                        try:
+                                            self.mongo.insert(result, collection="data")
+                                        except DuplicateKeyError as e:
+                                            result.pop("created_at")
+                                            
+                                            filter_mongo = {"_id": id_metadata}
+                                            data_mongo = {
+                                                "$set": {
+                                                    **result
+                                                }
+                                            }
+                                            
+                                            self.mongo.update(data_mongo, collection="data", filter=filter_mongo)
+                                else:
+                                    break
+                            else:
+                                break
+                            
+                            start += 20

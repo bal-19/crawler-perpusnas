@@ -57,12 +57,12 @@ class fetch:
         """Fetch district data from API"""
         url = f"{BASE_URL}/public/kewilayahan/dati3/list-dropdown/{id_kabkota}"
         
-        district = Scraper().scrape_region(url)
+        district = Scraper().get_region(url)
         return district
 
     def fetch_subdistrict_data(id_kecamatan: str) -> list[dict]:
         """Fetch subdistrict data from API"""
         url = f"{BASE_URL}/public/kewilayahan/dati4/list-dropdown/{id_kecamatan}"
         
-        subdistrict = Scraper().scrape_region(url)
+        subdistrict = Scraper().get_region(url)
         return subdistrict
