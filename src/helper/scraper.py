@@ -102,8 +102,9 @@ class Scraper:
         }
         
         response = self.session.get(url, timeout=10, params=params, cookies=self.cookies, headers=self.headers)
-        
+
         if response.status_code == 200:
+            print(response.url)
             result = response.json()
             return result
         
