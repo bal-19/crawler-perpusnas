@@ -29,7 +29,7 @@ class Perpusnas:
                         data = fetch.fetch_libraries_data(start=start, length=20, provinsi_id=provinsi_id, kabkota_id=kabkota_id, kecamatan_id=kecamatan_id)
                         if data.get("data"):
                             for detail_data in data.get("data"):
-                                if detail_data.get("provinsi_id"):
+                                if "nama_provinsi" not in detail_data:
                                     continue
                                 
                                 result = mapping.data(detail_data)
@@ -55,6 +55,5 @@ class Perpusnas:
 
                         if len(data.get("data")) < 20:
                             break
-
                         sleep(2)
                         start += 20
