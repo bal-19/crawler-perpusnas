@@ -9,14 +9,14 @@ class PerpustakaanMetadataModel(BaseModel):
     nama: str
     lembaga: str | None
     jenis: str
-    subjenis: str 
+    subjenis: str
     status: str | None
     alamat: str | None
     telepon: str | None
     email: str | None
     website: str | None
-    kode_pos: str 
-    kelurahan: str
+    kode_pos: str | None
+    kelurahan: str | None
     kecamatan: str
     kabkota: str
     provinsi: str
