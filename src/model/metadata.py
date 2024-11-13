@@ -16,7 +16,7 @@ class PerpustakaanMetadataModel(BaseModel):
     email: str | None
     website: str | None
     kode_pos: str | None
-    kelurahan: str | None
+    kelurahan: str
     kecamatan: str
     kabkota: str
     provinsi: str
