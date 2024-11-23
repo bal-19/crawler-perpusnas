@@ -1,8 +1,7 @@
-from ..model.metadata import PerpustakaanMetadataModel
-
+from model.metadata import PerpustakaanMetadataModel
 from hashlib import md5
-import uuid
 
+import uuid
 
 def generate_id(data: dict) -> str:
     payload = PerpustakaanMetadataModel.model_validate(data)

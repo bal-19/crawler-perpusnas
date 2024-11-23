@@ -1,14 +1,17 @@
 from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-from bs4 import BeautifulSoup
 from datetime import datetime
+from urllib3.util.retry import Retry
+from controllers import Controllers
+from helpers.html_parser import HtmlParser
 
 import requests
-import time
 
 
-class Scraper:
-    def __init__(self):
+class PerpusnasControllers(Controllers):
+
+    def __init__(self, *args, **kwargs):
+        super(PerpusnasControllers, self).__init__(*args, **kwargs)
+        self.base_url = "https://data.perpusnas.go.id"
         self.cookies = {
             'ci_session': 'kasghvuv2v4c7f1jdl6gglbqrc843tvg',
         }
@@ -41,8 +44,49 @@ class Scraper:
         self.adapter = HTTPAdapter(max_retries=self.retries)
         self.session.mount("http://", self.adapter)
         self.session.mount("https://", self.adapter)
+        
+        self.parser = HtmlParser()
     
-    def get_libraries(self, url: str, start: int = 0, length: int = 10, **kwargs) -> dict:
+    def mapping(self, data: dict):
+        npp = data.get("npp") if data.get("npp") else None
+        npp_lama = data.get("npp_lama") if data.get("npp_lama") else None
+        nama = data.get("nama") if data.get("nama") else None
+        lembaga_induk = data.get("lembaga_induk") if data.get("lembaga_induk") else None
+        alamat = data.get("alamat") if data.get("alamat") else None
+        telepon = data.get("telepon") if data.get("telepon") else None
+        email = data.get("email") if data.get("email") else None
+        website = data.get("website") if data.get("website") else None
+        jenis = data.get("jenis") if data.get("jenis").capitalize() else None
+        sub_jenis = data.get("subjenis") if data.get("subjenis") else None
+        status_perpus = data.get("status_perpus").capitalize() if data.get("status_perpus") else None
+        kode_pos = data.get("kode_pos") if data.get("kode_pos") else None
+        provinsi = data.get("nama_provinsi") if data.get("nama_provinsi") else None
+        kabkota = data.get("nama_kabkota") if data.get("nama_kabkota") else None
+        kecamatan = data.get('nama_kecamatan') if data.get("nama_kecamatan") else None
+        kelurahan = data.get("nama_kelurahan").capitalize() if data.get("nama_kelurahan") else None
+        
+        return dict(
+            npp=npp,
+            npp_lama=npp_lama,
+            nama=nama,
+            lembaga=lembaga_induk,
+            jenis=jenis,
+            subjenis=sub_jenis,
+            status=status_perpus,
+            alamat=alamat,
+            telepon=telepon,
+            email=email,
+            website=website,
+            kode_pos=kode_pos,
+            kelurahan=kelurahan,
+            kecamatan=kecamatan,
+            kabkota=kabkota,
+            provinsi=provinsi,
+            created_at=int(datetime.now().timestamp() * 1000),
+            updated_at=int(datetime.now().timestamp() * 1000)
+        )
+    
+    async def get_data(self, url: str, start: int = 0, length: int = 10, **kwargs) -> dict | None:
         current_timestamp = int(datetime.now().timestamp())
         params = {
             'jenis': str(kwargs.get('jenis', '')).upper(),
@@ -104,22 +148,20 @@ class Scraper:
         response = self.session.get(url, timeout=10, params=params, cookies=self.cookies, headers=self.headers)
 
         if response.status_code == 200:
-            print(response.url)
+            self.log.debug(response.url)
             result = response.json()
             return result
         
         else:
-            return
-
-    def get_type(self, url: str) -> list:
+            return None
+    
+    async def get_type(self, url: str) -> list:
         response = self.session.get(url, timeout=10, headers=self.headers)
         
         if response.status_code == 200:
-            soup = BeautifulSoup(response.text, "html.parser")
             type_list = list()
             
-            options = soup.select("option")
-            
+            options = self.parser.bs4_parser(response.text, "option")
             if options:
                 for option in options:
                     type_value = option.get("value")
@@ -131,7 +173,7 @@ class Scraper:
         else:
             return
     
-    def get_region(self, url: str) -> dict:
+    async def get_region(self, url: str) -> dict:
         response = self.session.get(url, timeout=10, headers=self.headers)
         
         if response.status_code == 200:
