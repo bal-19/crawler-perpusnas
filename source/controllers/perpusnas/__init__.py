@@ -59,6 +59,7 @@ class PerpusnasControllers(Controllers):
         jenis = data.get("jenis") if data.get("jenis").capitalize() else None
         sub_jenis = data.get("subjenis") if data.get("subjenis") else None
         status_perpus = data.get("status_perpus").capitalize() if data.get("status_perpus") else None
+        status_npp = data.get("status_npp").capitalize() if data.get("status_npp") else None
         kode_pos = data.get("kode_pos") if data.get("kode_pos") else None
         provinsi = data.get("nama_provinsi") if data.get("nama_provinsi") else None
         kabkota = data.get("nama_kabkota") if data.get("nama_kabkota") else None
@@ -73,6 +74,7 @@ class PerpusnasControllers(Controllers):
             jenis=jenis,
             subjenis=sub_jenis,
             status=status_perpus,
+            status_npp=status_npp,
             alamat=alamat,
             telepon=telepon,
             email=email,
