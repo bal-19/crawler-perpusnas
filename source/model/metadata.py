@@ -9,8 +9,9 @@ class PerpustakaanMetadataModel(BaseModel):
     nama: str
     lembaga: str | None
     jenis: str
-    subjenis: str
+    subjenis: str | None
     status: str | None
+    status_npp: str | None
     alamat: str | None
     telepon: str | None
     email: str | None
