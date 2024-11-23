@@ -1,11 +1,11 @@
-# .............. Crawler
+# Perpusnas Crawler Crawler
 
-get all data from .......
+get all data from https://data.perpusnas.go.id
 
 ## Usage/Examples
 
 ```bash
-..........
+python source/main.py --output=data --destination=mongo crawler --mode=perpusnas --type=get_perpustakaan
 ```
 
 ## Installation
@@ -13,13 +13,13 @@ get all data from .......
 clone project using git
 
 ```bash
-.................
+git clone https://github.com/bal-19/crawler-perpusnas.git
 ```
 
 go to directory
 
 ```bash
-................
+cd crawler-perpusnas
 ```
 
 create python virtual environment
