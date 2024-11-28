@@ -5,7 +5,7 @@ get all data from https://data.perpusnas.go.id
 ## Usage/Examples
 
 ```bash
-python source/main.py --output=data --destination=mongo crawler --mode=perpusnas --type=get_perpustakaan
+python source/main.py --output=data_perpustakaan --destination=mongo crawler --mode=perpusnas --type=get_perpustakaan
 ```
 
 ## Installation
