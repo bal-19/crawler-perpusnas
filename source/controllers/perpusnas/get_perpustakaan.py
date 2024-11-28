@@ -55,7 +55,7 @@ class PerpusnasGetPerpustakaan(PerpusnasControllers):
         libraries = await self.get_data(url, start=start, length=length, **kwargs)
         return libraries
 
-    async def fetch_type_data(self, ) -> list[str]:
+    async def fetch_type_data(self) -> list[str]:
         """Fetch type data from API"""
         url = f"{self.base_url}/reference/list-dropdown/jenis-perpustakaan"
         
@@ -70,7 +70,7 @@ class PerpusnasGetPerpustakaan(PerpusnasControllers):
         subtypes = await self.get_type(url)
         return subtypes
     
-    async def fetch_province_data(self, ) -> list[dict]:
+    async def fetch_province_data(self) -> list[dict]:
         """Fetch province data from API"""
         url = f"{self.base_url}/public/kewilayahan/dati1/list-dropdown"
         
