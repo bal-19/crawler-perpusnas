@@ -4,8 +4,8 @@ import asyncio
 if __name__ == "__main__":
     argp = argparse.ArgumentParser()
     argp.add_argument("-c", "--config", dest="config", type=str, default="config.ini")
-    argp.add_argument("-d", "--destination", dest="destination", type=str)
-    argp.add_argument("-o", "--output", dest="output", type=str)
+    argp.add_argument("-d", "--destination", dest="destination", type=str, help="databse service. eg: mongo, mysql, postgre")
+    argp.add_argument("-o", "--output", dest="output", type=str, help="collection/table name")
 
     argp_sub = argp.add_subparsers(title="action", help="-h / --help to see usage")
 
