@@ -8,6 +8,10 @@ get all data from https://data.perpusnas.go.id
 python source/main.py --output=data_perpustakaan --destination=mongo crawler --mode=perpusnas --type=get_perpustakaan
 ```
 
+## Requirements
+
+**Python Version:** [3.10.14](https://www.python.org/downloads/release/python-31014/)
+
 ## Installation
 
 clone project using git
